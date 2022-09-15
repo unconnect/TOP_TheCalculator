@@ -49,9 +49,10 @@ const updateDisplay = (value) => {
 }
 
 const updateCalculator = (e) => {
-  if(e.target)
   console.log(e.target.value)
   updateDisplay(e.target.value)
+  data.values[0] = Number(elements.display.textContent);
+  console.table(data.values);
 }
 
 const clearCalculator = () => {
@@ -73,4 +74,4 @@ const init = () => {
 init();
 
 // Debug Output
-console.log(elements);
+console.log(elements)
