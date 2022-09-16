@@ -13,29 +13,33 @@
   <body>
     <div class="app">
       <div class="calculator">
-        <div class="display"><div class="output">0</div></div>
+        <div class="display">
+          <div data-previous_operant class="previous_operant">0</div>
+          <div data-current_operant class="current_operant">0</div>
+        </div>
         <div class="command_keys">
-          <button value="clear">AC</button>
+          <button data-clear="clear">AC</button>
+          <button data-delete="delete">DEL</button>
         </div>
         <div class="operator_keys">
-          <button value="/">&divide;</button>
-          <button value="*">&times;</button>
-          <button value="-">&minus;</button>
-          <button value="+">&plus;</button>
-          <button value="=">&equals;</button>
+          <button data-operator="/">&divide;</button>
+          <button data-operator="*">&times;</button>
+          <button data-operator="-">&minus;</button>
+          <button data-operator="+">&plus;</button>
+          <button data-operator="=">&equals;</button>
         </div>
         <div class="number_keys">
-          <button value="7">7</button>
-          <button value="8">8</button>
-          <button value="9">9</button>
-          <button value="4">4</button>
-          <button value="5">5</button>
-          <button value="6">6</button>
-          <button value="1">1</button>
-          <button value="2">2</button>
-          <button value="3">3</button>
-          <button value="0">0</button>
-          <button value=".">,</button>
+          <button data-key="7">7</button>
+          <button data-key="8">8</button>
+          <button data-key="9">9</button>
+          <button data-key="4">4</button>
+          <button data-key="5">5</button>
+          <button data-key="6">6</button>
+          <button data-key="1">1</button>
+          <button data-key="2">2</button>
+          <button data-key="3">3</button>
+          <button data-key="0">0</button>
+          <button data-key=".">,</button>
         </div>
       </div>
       <footer>

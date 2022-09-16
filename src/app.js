@@ -1,8 +1,8 @@
-const elements = {
-  command_keys: document.querySelectorAll(".command_keys button"),
-  operator_keys: document.querySelectorAll(".operator_keys button"),
-  number_keys: document.querySelectorAll(".number_keys button"),
-  display: document.querySelector(".display .output")
+const ui = {
+  numberKeys: document.querySelectorAll("[data-key]"),
+  operatorKeys: document.querySelectorAll("[data-operator]"),
+  currentOperantText: document.querySelector("[data-current_operant]"),
+  clearKey: document.querySelector("[data-clear]"),
 };
 
 const data = {
@@ -44,14 +44,14 @@ const operate = (val1, val2, operant) => {
 };
 
 const updateDisplay = (value) => {
-  if(elements.display.textContent == '0') elements.display.textContent = "";
-  elements.display.textContent += value;
+  if(ui.currentOperantText.textContent == '0') ui.currentOperantText.textContent = "";
+  ui.currentOperantText.textContent += value;
 }
 
 const updateCalculator = (e) => {
-  console.log(e.target.value)
-  updateDisplay(e.target.value)
-  data.values[0] = Number(elements.display.textContent);
+  console.log(e.target.dataset.key)
+  updateDisplay(e.target.dataset.key);
+  data.values[0] = Number(ui.currentOperantText.textContent);
   console.table(data.values);
 }
 
@@ -59,19 +59,17 @@ const clearCalculator = () => {
   data['clear'] = true
   data['values'] = []
   data['operator'] = null
-  elements.display.textContent = 0
+  ui.currentOperantText.textContent = 0
 }
 
 const init = () => {
-  elements.number_keys.forEach(key => {
+  ui.numberKeys.forEach(key => {
     key.addEventListener('click', updateCalculator, false)
   })
-  elements.command_keys.forEach((key) => {
-    key.addEventListener("click", clearCalculator, false);
-  });
+  ui.clearKey.addEventListener("click", clearCalculator, false)
 };
 
 init();
 
 // Debug Output
-console.log(elements)
+console.log(ui)
