@@ -56,8 +56,9 @@ const operate = (data) => {
     data.calculationOperator = ''
     return
   }
-  data.previousOperant = data.currentOperant
+  data.previousOperant = data.result
   data.calculationOperator = data.currentOperator
+  data.currentOperant = ''
   updateDisplay(data)
 };
 
