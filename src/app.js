@@ -10,70 +10,102 @@ const ui = {
 
 const data = {
   clear: true,
-  currentOperant: '',
-  previousOperant: '',
-  operator: '',
+  currentOperant: "",
+  previousOperant: "",
+  result: "",
+  calculationOperator: "",
+  currentOperator: "",
 };
 
 // Mathematical Operations
 const add = (val1, val2) => {
-  return val1 + val2;
+  return String(Number(val1) + Number(val2));
 };
 
 const substract = (val1, val2) => {
-  return val1 - val2;
+  return String(Number(val1) - Number(val2));
 };
 
 const multiply = (val1, val2) => {
-  return val1 * val2;
+  return String(Number(val1) * Number(val2));
 };
 
 const divide = (val1, val2) => {
-  return val1 / val2;
+  return String(Number(val1) / Number(val2));
 };
 
-const operate = (val1, val2, operant) => {
-  switch (operant) {
+const operate = (data) => {
+  switch (data.calculationOperator) {
     case "+":
-      return add(val1, val2);
+      data.result = add(data.previousOperant, data.currentOperant);
+      break;
     case "-":
-      return substract(val1, val2);
+      data.result = substract(data.previousOperant, data.currentOperant);
+      break;
     case "*":
-      return multiply(val1, val2);
+      data.result = multiply(data.previousOperant, data.currentOperant);
+      break;
     case "/":
-      return divide(val1, val2);
-    default:
-      return false;
+      data.result = divide(data.previousOperant, data.currentOperant);
+      break;
   }
+  if(data.currentOperator === '=') {
+    data.previousOperant = ''
+    data.currentOperant = data.result
+    updateDisplay(data);
+    data.calculationOperator = ''
+    return
+  }
+  data.previousOperant = data.currentOperant
+  data.calculationOperator = data.currentOperator
+  updateDisplay(data)
 };
 
 const updateDisplay = (data) => {
   ui.currentOperantText.textContent = data.currentOperant
   ui.previousOperantText.textContent = data.previousOperant;
-  ui.operatorText.textContent = data.operator;
+  ui.operatorText.textContent = data.currentOperator;
+  console.table(data);
 }
 
 const updateCurrentOperant = (e) => {
-  if(data.clear) {
+  if(data.clear || !data.currentOperant || data.result) {
+    data.result = ''
     data.currentOperant = ''
     data.clear = false
   }
-  data.currentOperant += String(e.target.dataset.key);
+  data.currentOperant = data.currentOperant + String(e.target.dataset.key);
   updateDisplay(data)
-  console.table(data)
+}
+
+const setOperation = (e) => {
+  data.currentOperator = String(e.target.dataset.operator);
+  if (data.previousOperant && data.calculationOperator) {
+    operate(data);
+    return;
+  }
+  data.previousOperant = data.currentOperant
+  data.calculationOperator = data.currentOperator;
+  data.currentOperant = ''
+  updateDisplay(data)
 }
 
 const clearCalculator = () => {
   data.clear = true
-  data.currentOperant = 0
-  data.previousOperant = null
-  data.operator = null
+  data.currentOperant = ''
+  data.previousOperant = ''
+  data.result = ''
+  data.calculationOperator = ''
+  data.currentOperator = ''
   updateDisplay(data);
 }
 
 const init = () => {
   ui.numberKeys.forEach(key => {
-    key.addEventListener("click", updateCurrentOperant, false);
+    key.addEventListener("click", updateCurrentOperant, false)
+  })
+  ui.operatorKeys.forEach(key => {
+    key.addEventListener("click", setOperation, false)
   })
   ui.clearKey.addEventListener("click", clearCalculator, false)
 };
