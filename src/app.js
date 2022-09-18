@@ -1,14 +1,18 @@
 const ui = {
   numberKeys: document.querySelectorAll("[data-key]"),
   operatorKeys: document.querySelectorAll("[data-operator]"),
-  currentOperantText: document.querySelector("[data-current_operant]"),
-  clearKey: document.querySelector("[data-clear]"),
+  currentOperantText: document.querySelector("[data-current_operant_output]"),
+  previousOperantText: document.querySelector("[data-previous_operant_output]"),
+  operatorText: document.querySelector("[data-operator_output]"),
+  clearKey: document.querySelector("[data-all-clear]"),
+  deleteKey: document.querySelector("[data-delete]"),
 };
 
 const data = {
   clear: true,
-  values: [],
-  operator: null,
+  currentOperant: '',
+  previousOperant: '',
+  operator: '',
 };
 
 // Mathematical Operations
@@ -43,28 +47,33 @@ const operate = (val1, val2, operant) => {
   }
 };
 
-const updateDisplay = (value) => {
-  if(ui.currentOperantText.textContent == '0') ui.currentOperantText.textContent = "";
-  ui.currentOperantText.textContent += value;
+const updateDisplay = (data) => {
+  ui.currentOperantText.textContent = data.currentOperant
+  ui.previousOperantText.textContent = data.previousOperant;
+  ui.operatorText.textContent = data.operator;
 }
 
-const updateCalculator = (e) => {
-  console.log(e.target.dataset.key)
-  updateDisplay(e.target.dataset.key);
-  data.values[0] = Number(ui.currentOperantText.textContent);
-  console.table(data.values);
+const updateCurrentOperant = (e) => {
+  if(data.clear) {
+    data.currentOperant = ''
+    data.clear = false
+  }
+  data.currentOperant += String(e.target.dataset.key);
+  updateDisplay(data)
+  console.table(data)
 }
 
 const clearCalculator = () => {
-  data['clear'] = true
-  data['values'] = []
-  data['operator'] = null
-  ui.currentOperantText.textContent = 0
+  data.clear = true
+  data.currentOperant = 0
+  data.previousOperant = null
+  data.operator = null
+  updateDisplay(data);
 }
 
 const init = () => {
   ui.numberKeys.forEach(key => {
-    key.addEventListener('click', updateCalculator, false)
+    key.addEventListener("click", updateCurrentOperant, false);
   })
   ui.clearKey.addEventListener("click", clearCalculator, false)
 };
