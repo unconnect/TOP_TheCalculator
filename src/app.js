@@ -113,5 +113,13 @@ const init = () => {
 
 init();
 
-// Debug Output
-console.log(ui)
+/**
+ * TODOS
+ * 
+ * - [ ] round answers
+ * - [ ] BUGFIX: pressing = before entering all numbers causes still errors
+ * - [ ] Check for error and display message when trying to devide by 0
+ * - [ ] EXTRA: make decimals . work
+ * - [ ] EXTRA: make DEL button work
+ * - [ ] EXTRA: add keyboard support
+ */
