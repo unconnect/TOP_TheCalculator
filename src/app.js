@@ -8,7 +8,7 @@ const ui = {
   deleteKey: document.querySelector("[data-delete]"),
 };
 
-const data = {
+const calcData = {
   clear: true,
   currentOperant: "",
   previousOperant: "",
@@ -19,19 +19,19 @@ const data = {
 
 // Mathematical Operations
 const add = (val1, val2) => {
-  return String(Number(val1) + Number(val2));
+  return String(parseFloat(val1) + parseFloat(val2));
 };
 
 const substract = (val1, val2) => {
-  return String(Number(val1) - Number(val2));
+  return String(parseFloat(val1) - parseFloat(val2));
 };
 
 const multiply = (val1, val2) => {
-  return String(Number(val1) * Number(val2));
+  return String(parseFloat(val1) * parseFloat(val2));
 };
 
 const divide = (val1, val2) => {
-  return String(Number(val1) / Number(val2));
+  return String(parseFloat(val1) / parseFloat(val2));
 };
 
 const operate = (data) => {
@@ -49,18 +49,22 @@ const operate = (data) => {
       data.result = divide(data.previousOperant, data.currentOperant);
       break;
   }
-  if(data.currentOperator === '=') {
-    data.previousOperant = ''
-    data.currentOperant = data.result
-    updateDisplay(data);
-    data.calculationOperator = ''
-    return
-  }
-  data.previousOperant = data.result
-  data.calculationOperator = data.currentOperator
-  data.currentOperant = ''
-  updateDisplay(data)
+  setResult(calcData);
 };
+
+const setResult = (data) => {
+    if (data.currentOperator === "=") {
+      data.previousOperant = "";
+      data.currentOperant = data.result;
+      updateDisplay(data);
+      data.calculationOperator = "";
+      return;
+    }
+    data.previousOperant = data.result;
+    data.calculationOperator = data.currentOperator;
+    data.currentOperant = "";
+    updateDisplay(data);
+}
 
 const updateDisplay = (data) => {
   ui.currentOperantText.textContent = data.currentOperant
@@ -70,35 +74,45 @@ const updateDisplay = (data) => {
 }
 
 const updateCurrentOperant = (e) => {
-  if(data.clear || !data.currentOperant || data.result) {
-    data.result = ''
-    data.currentOperant = ''
-    data.clear = false
+  if(calcData.clear || !calcData.currentOperant || calcData.result) {
+    calcData.result = ''
+    calcData.currentOperant = ''
+    calcData.clear = false
   }
-  data.currentOperant = data.currentOperant + String(e.target.dataset.key);
-  updateDisplay(data)
+  calcData.currentOperant = calcData.currentOperant + String(e.target.dataset.key);
+  updateDisplay(calcData)
 }
 
 const setOperation = (e) => {
-  data.currentOperator = String(e.target.dataset.operator);
-  if (data.previousOperant && data.calculationOperator) {
-    operate(data);
+  const operator = String(e.target.dataset.operator);
+  if (operator === '=' && (!calcData.previousOperant || !calcData.calculationOperator || !calcData.currentOperant)) {
     return;
   }
-  data.previousOperant = data.currentOperant
-  data.calculationOperator = data.currentOperator;
-  data.currentOperant = ''
-  updateDisplay(data)
+  if (operator && operator !== '=' && !calcData.currentOperant) {
+    calcData.currentOperator = operator;
+    calcData.calculationOperator = calcData.currentOperator;
+    updateDisplay(calcData);
+    return;
+  }
+  calcData.currentOperator = operator;
+  if (calcData.previousOperant && calcData.calculationOperator) {
+    operate(calcData);
+    return;
+  }
+  calcData.previousOperant = calcData.currentOperant
+  calcData.calculationOperator = calcData.currentOperator;
+  calcData.currentOperant = ''
+  updateDisplay(calcData)
 }
 
 const clearCalculator = () => {
-  data.clear = true
-  data.currentOperant = ''
-  data.previousOperant = ''
-  data.result = ''
-  data.calculationOperator = ''
-  data.currentOperator = ''
-  updateDisplay(data);
+  calcData.clear = true
+  calcData.currentOperant = ''
+  calcData.previousOperant = ''
+  calcData.result = ''
+  calcData.calculationOperator = ''
+  calcData.currentOperator = ''
+  updateDisplay(calcData);
 }
 
 const init = () => {
@@ -117,7 +131,7 @@ init();
  * TODOS
  * 
  * - [ ] round answers
- * - [ ] BUGFIX: pressing = before entering all numbers causes still errors
+ * - [x] BUGFIX: pressing = before entering all numbers causes still errors
  * - [ ] Check for error and display message when trying to devide by 0
  * - [ ] EXTRA: make decimals . work
  * - [ ] EXTRA: make DEL button work
