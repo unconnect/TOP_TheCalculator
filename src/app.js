@@ -1,3 +1,4 @@
+const ROUNDDIGITS = 1000
 const ui = {
   numberKeys: document.querySelectorAll("[data-key]"),
   operatorKeys: document.querySelectorAll("[data-operator]"),
@@ -19,19 +20,19 @@ const calcData = {
 
 // Mathematical Operations
 const add = (val1, val2) => {
-  return String(val1 + val2)
+  return val1 + val2
 }
 
 const substract = (val1, val2) => {
-  return String(val1 - val2)
+  return val1 - val2
 }
 
 const multiply = (val1, val2) => {
-  return String(val1 * val2)
+  return val1 * val2
 }
 
 const divide = (val1, val2) => {
-  return String(val1 / val2)
+  return val1 / val2
 }
 
 const operate = () => {
@@ -56,8 +57,15 @@ const operate = () => {
       return
   }
   calcData.operator = undefined
-  calcData.currentOperant = result
+  calcData.currentOperant = Number(getRoundedResult(result, ROUNDDIGITS)).toLocaleString('de')
   calcData.previousOperant = ""
+}
+
+const getRoundedResult = (value, digits) => {
+  if( (value - Math.floor(value)) !== 0 ) {
+    return Math.round((value + Number.EPSILON) * digits) / digits
+  }
+  return value
 }
 
 const updateDisplay = () => {
@@ -68,7 +76,7 @@ const updateDisplay = () => {
 }
 
 const updateCurrentOperant = (e) => {
-  if (calcData.clear || !calcData.currentOperant || calcData.result) {
+  if (calcData.clear) {
     calcData.result = ""
     calcData.currentOperant = ""
     calcData.clear = false
@@ -127,6 +135,7 @@ const init = () => {
   (e) => {
     operate()
     updateDisplay()
+    calcData.clear = true
   })
 }
 
@@ -137,10 +146,10 @@ init()
  *
  * - [x] BUGFIX: pressing = before entering all numbers causes still errors
  * - [x] REFACTOR: calOperator seams redundant, should be removed
- * - [ ] BUGFIX: equal Operator should have own eventlistener to just operate and updatedisplay or otherwise update setOperation fn with more logic
- * - [ ] round answers
+ * - [x] BUGFIX: equal Operator should have own eventlistener to just operate and updatedisplay or otherwise update setOperation fn with more logic
+ * - [x] round answers - but it seams still fishy
  * - [ ] Check for error and display message when trying to devide by 0
- * - [ ] EXTRA: make decimals . work
+ * - [ ] EXTRA: make decimals . work in german
  * - [ ] EXTRA: make DEL button work
  * - [ ] EXTRA: add keyboard support
  */
