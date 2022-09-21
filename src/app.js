@@ -1,4 +1,3 @@
-const ROUNDDIGITS = 1000
 const ui = {
   numberKeys: document.querySelectorAll("[data-key]"),
   operatorKeys: document.querySelectorAll("[data-operator]"),
@@ -57,13 +56,13 @@ const operate = () => {
       return
   }
   calcData.operator = undefined
-  calcData.currentOperant = Number(getRoundedResult(result, ROUNDDIGITS)).toLocaleString('de')
+  calcData.currentOperant = Number(getRoundedResult(result)).toLocaleString('de')
   calcData.previousOperant = ""
 }
 
-const getRoundedResult = (value, digits) => {
+const getRoundedResult = (value) => {
   if( (value - Math.floor(value)) !== 0 ) {
-    return Math.round((value + Number.EPSILON) * digits) / digits
+    return Math.round((value + Number.EPSILON) * 100) / 100
   }
   return value
 }
