@@ -1,7 +1,7 @@
 const ui = {
   numberKeys: document.querySelectorAll("[data-key]"),
   operatorKeys: document.querySelectorAll("[data-operator]"),
-  equalKey: document.querySelector('[data-equal]'),
+  equalKey: document.querySelector("[data-equal]"),
   currentOperantText: document.querySelector("[data-current_operant_output]"),
   previousOperantText: document.querySelector("[data-previous_operant_output]"),
   operatorText: document.querySelector("[data-operator_output]"),
@@ -38,7 +38,7 @@ const operate = () => {
   let result
   const previousOperant = parseFloat(calcData.previousOperant)
   const currentOperant = parseFloat(calcData.currentOperant)
-  if(isNaN(previousOperant) || isNaN(currentOperant)) return
+  if (isNaN(previousOperant) || isNaN(currentOperant)) return
   switch (calcData.operator) {
     case "+":
       result = add(previousOperant, currentOperant)
@@ -56,12 +56,18 @@ const operate = () => {
       return
   }
   calcData.operator = undefined
-  calcData.currentOperant = Number(getRoundedResult(result)).toLocaleString('de')
   calcData.previousOperant = ""
+  if (result === Infinity) {
+    calcData.currentOperant = "ERROR"
+    return
+  }
+  calcData.currentOperant = Number(getRoundedResult(result)).toLocaleString(
+    "de"
+  )
 }
 
 const getRoundedResult = (value) => {
-  if( (value - Math.floor(value)) !== 0 ) {
+  if (value - Math.floor(value) !== 0) {
     return Math.round((value + Number.EPSILON) * 100) / 100
   }
   return value
@@ -86,8 +92,8 @@ const updateCurrentOperant = (e) => {
 
 const setOperation = (e) => {
   const operator = String(e.target.dataset.operator)
-  if (calcData.currentOperant === '') return
-  if (calcData.previousOperant !== '') operate()
+  if (calcData.currentOperant === "") return
+  if (calcData.previousOperant !== "") operate()
   calcData.operator = operator
   calcData.previousOperant = calcData.currentOperant
   calcData.currentOperant = ""
@@ -130,8 +136,7 @@ const init = () => {
     },
     false
   )
-  ui.equalKey.addEventListener("click", 
-  (e) => {
+  ui.equalKey.addEventListener("click", (e) => {
     operate()
     updateDisplay()
     calcData.clear = true
@@ -147,8 +152,9 @@ init()
  * - [x] REFACTOR: calOperator seams redundant, should be removed
  * - [x] BUGFIX: equal Operator should have own eventlistener to just operate and updatedisplay or otherwise update setOperation fn with more logic
  * - [x] round answers - but it seams still fishy
- * - [ ] Check for error and display message when trying to devide by 0
+ * - [x] Check for error and display message when trying to devide by 0
  * - [ ] EXTRA: make decimals . work in german
+ *              right now the, when calculation returns a result which is converted to  *              german local string, after using this for new calculation it is NaN and *              it returns an error.
  * - [ ] EXTRA: make DEL button work
  * - [ ] EXTRA: add keyboard support
  */
