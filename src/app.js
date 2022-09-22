@@ -156,6 +156,7 @@ init()
  * - [x] BUGFIX: equal Operator should have own eventlistener to just operate and updatedisplay or otherwise update setOperation fn with more logic
  * - [x] round answers - but it seams still fishy
  * - [x] Check for error and display message when trying to devide by 0
+ * - [x] Add digit group separators
  * - [ ] EXTRA: make decimals . work in german
  *              right now the, when calculation returns a result which is converted to  *              german local string, after using this for new calculation it is NaN and *              it returns an error.
  * - [ ] EXTRA: make DEL button work
