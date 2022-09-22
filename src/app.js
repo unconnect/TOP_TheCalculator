@@ -61,9 +61,7 @@ const operate = () => {
     calcData.currentOperant = "ERROR"
     return
   }
-  calcData.currentOperant = Number(getRoundedResult(result)).toLocaleString(
-    "de"
-  )
+  calcData.currentOperant = result
 }
 
 const getRoundedResult = (value) => {
@@ -74,10 +72,15 @@ const getRoundedResult = (value) => {
 }
 
 const updateDisplay = () => {
-  ui.currentOperantText.textContent = calcData.currentOperant
-  ui.previousOperantText.textContent = calcData.previousOperant
+  ui.currentOperantText.textContent = roundAndCovertToLocalString(calcData.currentOperant)
+  ui.previousOperantText.textContent = roundAndCovertToLocalString(calcData.previousOperant)
   ui.operatorText.textContent = calcData.operator
   console.table(calcData)
+}
+
+const roundAndCovertToLocalString = (value, isoCode = "de") => {
+    return Number(getRoundedResult(value)).toLocaleString(
+    isoCode)
 }
 
 const updateCurrentOperant = (e) => {
@@ -92,9 +95,9 @@ const updateCurrentOperant = (e) => {
 
 const setOperation = (e) => {
   const operator = String(e.target.dataset.operator)
-  if (calcData.currentOperant === "") return
   if (calcData.previousOperant !== "") operate()
   calcData.operator = operator
+  if (calcData.currentOperant === "") return
   calcData.previousOperant = calcData.currentOperant
   calcData.currentOperant = ""
 }
