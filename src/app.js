@@ -2,9 +2,9 @@ const ui = {
   numberKeys: document.querySelectorAll("[data-key]"),
   operatorKeys: document.querySelectorAll("[data-operator]"),
   equalKey: document.querySelector("[data-equal]"),
-  currentOperantText: document.querySelector("[data-current_operant_output]"),
-  previousOperantText: document.querySelector("[data-previous_operant_output]"),
-  operatorText: document.querySelector("[data-operator_output]"),
+  currentOperantText: document.querySelector("[data-current-operant-output]"),
+  previousOperantText: document.querySelector("[data-previous-operant-output]"),
+  operatorText: document.querySelector("[data-operator-output]"),
   clearKey: document.querySelector("[data-all-clear]"),
   deleteKey: document.querySelector("[data-delete]"),
 }
@@ -72,25 +72,36 @@ const getRoundedResult = (value) => {
 }
 
 const updateDisplay = () => {
-  ui.currentOperantText.textContent = roundAndCovertToLocalString(calcData.currentOperant)
-  ui.previousOperantText.textContent = roundAndCovertToLocalString(calcData.previousOperant)
+  ui.currentOperantText.textContent =
+    getFormatedDisplayValue(calcData.currentOperant)
+  
+  ui.previousOperantText.textContent = 
+    getFormatedDisplayValue(calcData.previousOperant)
+  
   ui.operatorText.textContent = calcData.operator
   console.table(calcData)
 }
 
-const roundAndCovertToLocalString = (value, isoCode = "de") => {
-    return Number(getRoundedResult(value)).toLocaleString(
-    isoCode)
+// TODO Calculation not quit right. Maybe the decimal separtor formatting needs to be changed.
+// It seams the decimal seperator as komma is not right or operate() needs an update.
+const getFormatedDisplayValue = (value) => {
+  const intNumberString = String(value).split(',')[0]
+  const decimalNumberString = String(value).split(',')[1]
+  const intNumber = Number(intNumberString).toLocaleString("de")
+  const decimalNumber = Number(decimalNumberString).toLocaleString("de")
+  if (isNaN(decimalNumber)) return `${intNumber}`
+  return `${intNumber},${decimalNumber}`
 }
 
 const updateCurrentOperant = (e) => {
+  let keyValue = e.target.dataset.key
+  if(keyValue === ',' && calcData.currentOperant.includes(',')) return
   if (calcData.clear) {
     calcData.result = ""
     calcData.currentOperant = ""
     calcData.clear = false
   }
-  calcData.currentOperant =
-    calcData.currentOperant + String(e.target.dataset.key)
+  calcData.currentOperant = String(calcData.currentOperant) + String(keyValue)
 }
 
 const setOperation = (e) => {
@@ -159,6 +170,7 @@ init()
  * - [x] Add digit group separators
  * - [ ] EXTRA: make decimals . work in german
  *              right now the, when calculation returns a result which is converted to  *              german local string, after using this for new calculation it is NaN and *              it returns an error.
+ * - [ ] BUGFIX: test for empty operants and don't make roudnding and number conversion if empty
  * - [ ] EXTRA: make DEL button work
  * - [ ] EXTRA: add keyboard support
  */
