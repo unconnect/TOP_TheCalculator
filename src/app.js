@@ -34,23 +34,32 @@ const divide = (val1, val2) => {
   return val1 / val2
 }
 
+const replaceCommaWithDot = (value) => {
+  return value.replace(',', '.');
+}
+
 const operate = () => {
   let result
-  const previousOperant = parseFloat(calcData.previousOperant)
-  const currentOperant = parseFloat(calcData.currentOperant)
-  if (isNaN(previousOperant) || isNaN(currentOperant)) return
+  const formatedPreviousOperant = parseFloat(
+    replaceCommaWithDot(calcData.previousOperant)
+  )
+  const formatedCurrentOperant = parseFloat(
+    replaceCommaWithDot(calcData.currentOperant)
+  )
+  console.table(formatedPreviousOperant, formatedCurrentOperant)
+  if (isNaN(formatedPreviousOperant) || isNaN(formatedCurrentOperant)) return
   switch (calcData.operator) {
     case "+":
-      result = add(previousOperant, currentOperant)
+      result = add(formatedPreviousOperant, formatedCurrentOperant)
       break
     case "-":
-      result = substract(previousOperant, currentOperant)
+      result = substract(formatedPreviousOperant, formatedCurrentOperant)
       break
     case "*":
-      result = multiply(previousOperant, currentOperant)
+      result = multiply(formatedPreviousOperant, formatedCurrentOperant)
       break
     case "/":
-      result = divide(previousOperant, currentOperant)
+      result = divide(formatedPreviousOperant, formatedCurrentOperant)
       break
     default:
       return
@@ -61,7 +70,7 @@ const operate = () => {
     calcData.currentOperant = "ERROR"
     return
   }
-  calcData.currentOperant = result
+  calcData.currentOperant = String(result).replace('.', ',');
 }
 
 const getRoundedResult = (value) => {
@@ -72,25 +81,31 @@ const getRoundedResult = (value) => {
 }
 
 const updateDisplay = () => {
-  ui.currentOperantText.textContent =
-    getFormatedDisplayValue(calcData.currentOperant)
+  console.log('currentOperantText')
+  ui.currentOperantText.textContent = getFormatedDisplayValue(
+    calcData.currentOperant
+  )
   
-  ui.previousOperantText.textContent = 
-    getFormatedDisplayValue(calcData.previousOperant)
+  console.log('previousOperant')
+  ui.previousOperantText.textContent = getFormatedDisplayValue(
+    calcData.previousOperant
+  )
   
   ui.operatorText.textContent = calcData.operator
   console.table(calcData)
 }
 
-// TODO Calculation not quit right. Maybe the decimal separtor formatting needs to be changed.
-// It seams the decimal seperator as komma is not right or operate() needs an update.
+// TODO Still not quiet right.
+// the calcData should only be numbers and der Text Display can be string
 const getFormatedDisplayValue = (value) => {
+  console.log('value', value)
   const intNumberString = String(value).split(',')[0]
   const decimalNumberString = String(value).split(',')[1]
-  const intNumber = Number(intNumberString).toLocaleString("de")
-  const decimalNumber = Number(decimalNumberString).toLocaleString("de")
-  if (isNaN(decimalNumber)) return `${intNumber}`
-  return `${intNumber},${decimalNumber}`
+  const intNumber = Number(intNumberString)
+  const decimalNumber = Number(decimalNumberString)
+  if (isNaN(decimalNumber)) return String(`${intNumber}`)
+  if (isNaN(decimalNumber) && value.includes(",")) return String(`${intNumber},`)
+  return String(`${intNumberString},${decimalNumberString}`)
 }
 
 const updateCurrentOperant = (e) => {
@@ -168,7 +183,7 @@ init()
  * - [x] round answers - but it seams still fishy
  * - [x] Check for error and display message when trying to devide by 0
  * - [x] Add digit group separators
- * - [ ] EXTRA: make decimals . work in german
+ * - [x] EXTRA: make decimals . work in german
  *              right now the, when calculation returns a result which is converted to  *              german local string, after using this for new calculation it is NaN and *              it returns an error.
  * - [ ] BUGFIX: test for empty operants and don't make roudnding and number conversion if empty
  * - [ ] EXTRA: make DEL button work
