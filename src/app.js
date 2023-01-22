@@ -81,12 +81,10 @@ const getRoundedResult = (value) => {
 }
 
 const updateDisplay = () => {
-  console.log('currentOperantText')
   ui.currentOperantText.textContent = getFormatedDisplayValue(
     calcData.currentOperant
   )
-  
-  console.log('previousOperant')
+ 
   ui.previousOperantText.textContent = getFormatedDisplayValue(
     calcData.previousOperant
   )
@@ -98,13 +96,13 @@ const updateDisplay = () => {
 // TODO Still not quiet right.
 // the calcData should only be numbers and der Text Display can be string
 const getFormatedDisplayValue = (value) => {
-  console.log('value', value)
   const intNumberString = String(value).split(',')[0]
   const decimalNumberString = String(value).split(',')[1]
   const intNumber = Number(intNumberString)
   const decimalNumber = Number(decimalNumberString)
-  if (isNaN(decimalNumber)) return String(`${intNumber}`)
+  if (String(value).startsWith(',')) return String(`0,${decimalNumberString}`)
   if (isNaN(decimalNumber) && value.includes(",")) return String(`${intNumber},`)
+  if (isNaN(decimalNumber)) return String(`${intNumber}`)
   return String(`${intNumberString},${decimalNumberString}`)
 }
 
@@ -136,6 +134,10 @@ const clearCalculator = () => {
   calcData.operator = ""
 }
 
+const deleteLastDigitFromCurrentOperant = () => {
+  calcData.currentOperant = calcData.currentOperant.slice(0, -1)
+}
+
 const init = () => {
   ui.numberKeys.forEach((key) => {
     key.addEventListener(
@@ -165,6 +167,14 @@ const init = () => {
     },
     false
   )
+  ui.deleteKey.addEventListener(
+    "click",
+    () => {
+      deleteLastDigitFromCurrentOperant()
+      updateDisplay()
+    },
+    false
+  )
   ui.equalKey.addEventListener("click", (e) => {
     operate()
     updateDisplay()
@@ -185,7 +195,8 @@ init()
  * - [x] Add digit group separators
  * - [x] EXTRA: make decimals . work in german
  *              right now the, when calculation returns a result which is converted to  *              german local string, after using this for new calculation it is NaN and *              it returns an error.
- * - [ ] BUGFIX: test for empty operants and don't make roudnding and number conversion if empty
- * - [ ] EXTRA: make DEL button work
+ * - [x] BUGFIX: test for empty operants 
+ * - [x] don't make roudnding and number conversion if empty
+ * - [x] EXTRA: make DEL button work
  * - [ ] EXTRA: add keyboard support
  */
